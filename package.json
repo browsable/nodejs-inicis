@@ -1,6 +1,6 @@
 {
   "name": "nodejs-inicis",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "inicis payment module with node.js",
   "main": "index.js",
   "scripts": {
