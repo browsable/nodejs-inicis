@@ -22,27 +22,58 @@ var NodeINIStdPay = {
 
     this.payForm = document.createElement("form");
     this.payForm.setAttribute('method', "post");
-    this.payForm.setAttribute('action', "");
+    this.payForm.setAttribute('action', '');
     this.payForm.setAttribute('id', this.payFormId);
     this.payForm.setAttribute('style', 'display: none');
 
     document.getElementsByTagName('body')[0].appendChild(this.payForm);
   },
 
-  pay: function (params, error) {
-    $.ajax({
-      type: "POST",
-      url: this.paymentUrl,
-      data: params,
-      success: function (response) {
-        window.NodeINIStdPay.mergeFormData(response.data);
-        window.NodeINIStdPay.insertFormInput(true);
+  pay: function (platform, params, error) {
 
-        // 결제 요청
-        INIStdPay.pay(window.NodeINIStdPay.payFormId);
-      },
-      error: error
-    });
+    let payUrl;
+
+    if (platform == 'mobile') {
+      if(params.P_GOPAYMETHOD == 'card') {
+        payUrl = 'https://mobile.inicis.com/smart/wcard/';
+      }
+      else if(params.P_GOPAYMETHOD == 'vbank') {
+        payUrl = 'https://mobile.inicis.com/smart/vbank/';
+      }
+      else if(params.P_GOPAYMETHOD == 'bank') {
+        payUrl = 'https://mobile.inicis.com/smart/bank/';
+      }
+      else if(params.P_GOPAYMETHOD == 'hpp') {
+        payUrl = 'https://mobile.inicis.com/smart/mobile/';
+      }
+      else if(params.P_GOPAYMETHOD == 'culture') {
+        payUrl = 'https://mobile.inicis.com/smart/culture/';
+      }
+      else if(params.P_GOPAYMETHOD == 'hpmn') {
+        payUrl = 'https://mobile.inicis.com/smart/hpmn/';
+      }
+      else {
+        payUrl = 'https://mobile.inicis.com/smart/wcard/';
+      }
+      window.NodeINIStdPay.mergeFormData(params);
+      window.NodeINIStdPay.insertFormInput(true);
+      this.payForm.setAttribute('action', payUrl);
+      this.payForm.submit();
+
+    } else {
+      $.ajax({
+        type: "POST",
+        url: this.paymentUrl,
+        data: params,
+        success: function (response) {
+          window.NodeINIStdPay.mergeFormData(response.data);
+          window.NodeINIStdPay.insertFormInput(true);
+          // 결제 요청
+          INIStdPay.pay(window.NodeINIStdPay.payFormId);
+        },
+        error: error
+      });
+    }
   },
 
   insertFormInput(removePre = false) {
