@@ -25,6 +25,7 @@ var NodeINIStdPay = {
     this.payForm.setAttribute('action', '');
     this.payForm.setAttribute('id', this.payFormId);
     this.payForm.setAttribute('style', 'display: none');
+    this.payForm.setAttribute('accept-charset', 'euc-kr');
 
     document.getElementsByTagName('body')[0].appendChild(this.payForm);
   },
